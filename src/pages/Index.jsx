@@ -1,4 +1,25 @@
 import { useState } from "react";
+import {
+  FaTwitter,
+  FaFacebook,
+  FaYoutube,
+  FaLinkedin,
+  FaInstagram,
+  FaTelegram,
+} from "react-icons/fa";
+import Contactpage from "./contact";
+import BlogPage from "./admin/bolgs";
+import Careers from "./careers";
+import BluestockAuth from "./basic";
+import Terms from "./terms";
+import Privacy from "./privacy";
+import Refund from "./refund";
+import Disclamer from "./discalmer";
+import AdminDashboard from "./admin/AdminDashboard";
+import IPO from "./Ipo";
+import {Lock} from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 function Index() {
   // Simple state for basic interactions
@@ -6,6 +27,15 @@ function Index() {
   const [watchlist, setWatchlist] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleLinkClick = () => {
+    setIsDropdownOpen(false); // close dropdown when a link is clicked
+  };
 
   // IPO data
   const allIPOs = [
@@ -91,89 +121,80 @@ function Index() {
         </div>
       )}
 
-      {/* Sign In Modal */}
-      {showSignInModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <h3 className="text-2xl font-bold mb-4">Sign In</h3>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full p-3 border rounded mb-4"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full p-3 border rounded mb-4"
-            />
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowSignInModal(false)}
-                className="flex-1 px-4 py-2 border rounded hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  setShowSignInModal(false);
-                  setShowSuccess(true);
-                  setTimeout(() => setShowSuccess(false), 2000);
-                }}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Sign In
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Header */}
-      <header className="bg-white shadow">
+  {/* Header */}
+   <header className="bg-white shadow sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <a href="/" className="text-2xl font-bold text-blue-600">
-                IPO Hub
-              </a>
-              <nav className="hidden md:flex space-x-6">
-                <a
-                  href="/"
-                  className="text-blue-600 font-semibold border-b-2 border-blue-600"
-                >
-                  Dashboard
-                </a>
-                <a
-                  href="/calendar"
-                  className="text-gray-600 hover:text-gray-900"
-                >
-                  IPO Calendar
-                </a>
-                <a
-                  href="/watchlist"
-                  className="text-gray-600 hover:text-gray-900"
-                >
-                  Watchlist
-                </a>
-                <a href="/news" className="text-gray-600 hover:text-gray-900">
-                  News
-                </a>
-              </nav>
+          <div className="flex items-center justify-between w-full">
+
+            {/* Left: Logo */}
+            <div className="flex items-center">
+              <img src="/assest/logo.png" alt="Logo" className="h-10 w-auto mr-4" />
+              <span className="text-2xl font-extrabold text-gray-900"><span className="text-blue-600"></span></span>
             </div>
-            <div className="space-x-4">
-              <button
-                onClick={handleSignInClick}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-all"
-              >
-                Sign In
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:scale-105 transition-all">
-                Get Started
-              </button>
+
+ <nav className="flex items-center space-x-6 relative">
+      <a href="/Ipo" className="text-sm font-semibold text-gray-600 hover:text-blue-700">IPO</a>
+      <a href="/community" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Community</a>
+
+      {/* Products Dropdown */}
+      <div className="relative">
+        <button
+          onClick={handleDropdownToggle}
+          className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
+        >
+          Products ▾
+        </button>
+
+        {isDropdownOpen && (
+          <div className="absolute bg-white shadow-lg rounded mt-2 z-10 w-40">
+            <a
+              href="/products"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              onClick={handleLinkClick}
+            >
+              All Products
+            </a>
+            <a
+              href="/Blogs"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              onClick={handleLinkClick}
+            >
+              Blogs
+            </a>
+            <a
+              href="/watchlist"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              onClick={handleLinkClick}
+            >
+              Watchlist
+            </a>
+          </div>
+        )}
+      </div>
+
+      <a href="/brokers" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Brokers ↗</a>
+      <a href="/news" className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center">
+        Live News <span className="ml-1 bg-blue-600 text-white text-xs font-bold px-1 rounded">NEW</span>
+      </a>
+    </nav>
+
+
+            {/* Right: Buttons */}
+            <div className="flex items-center space-x-3">
+               <Link to="/signin" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">Admin Login</Link>
+              <Link to="/signupnow" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">SignUpNow</Link>
+              <div className="text-black cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
+                  <path d="M3 3h4v4H3V3zm7 0h4v4h-4V3zm7 0h4v4h-4V3zM3 10h4v4H3v-4zm7 0h4v4h-4v-4zm7 0h4v4h-4v-4zM3 17h4v4H3v-4zm7 0h4v4h-4v-4zm7 0h4v4h-4v-4z" />
+                </svg>
+              </div>
             </div>
+
           </div>
         </div>
       </header>
+
+
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
@@ -436,100 +457,178 @@ function Index() {
           </button>
         </div>
       </main>
+      <footer  className="bg-black text-white pt-16 pb-8 text-sm">
+  < div className="max-w-6xl mx-auto px-4">
+    
+   {/* Top Links */}
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 mb-12">
+  
+  {/* Resources */}
+  <div>
+    <h4 className="font-semibold mb-4">Resources</h4>
+    <ul className="space-y-2 text-blue-600">
+      <li>
+        <a href="https://www.tradingview.com/chart/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Trading View
+        </a>
+      </li>
+      <li>
+        <a href="https://www.nseindia.com/resources/exchange-communication-holidays" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          NSE Holidays
+        </a>
+      </li>
+      <li>
+        <a href="https://www.evoting.cdslindia.com/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          e-Voting CDSL
+        </a>
+      </li>
+      <li>
+        <a href="https://www.evoting.nsdl.com/" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          e-Voting NSDL
+        </a>
+      </li>
+      <li>
+        <a href="https://www.nseindia.com/market-data/market-timings-holidays" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Market Timings
+        </a>
+      </li>
+    </ul>
+  </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="text-lg font-semibold mb-4">IPO Hub</h4>
-              <p className="text-gray-400">
-                Your trusted partner for IPO investments and market insights.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Products</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a
-                    href="/calendar"
-                    className="hover:text-white transition-colors"
-                  >
-                    IPO Calendar
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/news"
-                    className="hover:text-white transition-colors"
-                  >
-                    Market Analysis
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/watchlist"
-                    className="hover:text-white transition-colors"
-                  >
-                    Portfolio Tracker
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a
-                    href="/news"
-                    className="hover:text-white transition-colors"
-                  >
-                    Investment Guide
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/news"
-                    className="hover:text-white transition-colors"
-                  >
-                    Market News
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    API Documentation
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Privacy Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 IPO Hub. All rights reserved.</p>
-          </div>
+  {/* Company */}
+  <div>
+    <h4 className="font-semibold mb-4">Company</h4>
+    <ul className="space-y-2 text-blue-600">
+      <li><Link to="/careers" className="hover:underline">Careers</Link></li>
+      <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
+      <li><Link to="/about" className="hover:underline">About Us</Link></li>
+      <li className="hover:underline cursor-pointer">Community</li>
+      <li><Link to="/Blogs" className="hover:underline">Blogs</Link></li>
+    </ul>
+  </div>
+
+  {/* Offerings */}
+  <div>
+    <h4 className="font-semibold mb-4">Offerings</h4>
+    <ul className="space-y-2 text-blue-600">
+      <li className="hover:underline cursor-pointer">Compare Broker</li>
+      <li className="hover:underline cursor-pointer">Fin Calculators</li>
+      <li className="hover:underline cursor-pointer">IPO</li>
+      <li className="hover:underline cursor-pointer">All Brokers</li>
+      <li className="hover:underline cursor-pointer">Products</li>
+    </ul>
+  </div>
+
+  {/* Links */}
+  <div>
+    <h4 className="font-semibold mb-4">Links</h4>
+    <ul className="space-y-2 text-blue-600">
+      <li><Link to="/shark" className="hover:underline">Shark Investor</Link></li>
+      <li>
+        <a href="https://www.amfiindia.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Mutual Funds
+        </a>
+      </li>
+      <li>
+        <a href="https://www.nseindia.com/sitemap" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Sitemap
+        </a>
+      </li>
+      <li>
+        <a href="https://www.nseindia.com/market-data/live-equity-market" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Indian Indices
+        </a>
+      </li>
+      <li>
+        <a href="https://hackerone.com/bug-bounty-programs" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          Bug Bounty Program
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  {/* Policy */}
+  <div>
+    <h4 className="font-semibold mb-4">Policy</h4>
+    <ul className="space-y-2 text-blue-600">
+      <li><Link to="/Terms" className="hover:underline">Terms & Conditions</Link></li>
+      <li><Link to="/Privacy" className="hover:underline">Privacy Policy</Link></li>
+      <li><Link to="/Refund" className="hover:underline">Refund Policy</Link></li>
+      <li><Link to="/Disclaimer" className="hover:underline">Disclaimer</Link></li>
+      <li className="hover:underline cursor-pointer">Trust & Security</li>
+    </ul>
+  </div>
+</div>
+
+
+    {/* Middle Row: Logo, Info, Disclaimer */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-300 pt-8">
+      
+      {/* Social + Logo */}
+      <div className="flex flex-col items-start space-y-4">
+        <div className="flex space-x-4 text-blue-600 text-xl">
+          <i className="fab fa-x-twitter"></i>
+          <i className="fab fa-facebook"></i>
+          <i className="fab fa-youtube"></i>
+          <i className="fab fa-linkedin"></i>
+          <i className="fab fa-instagram"></i>
+          <i className="fab fa-telegram"></i>
         </div>
-      </footer>
-    </div>
-  );
-}
+       <div className="flex space-x-4 text-blue-400 text-xl">
+  <FaTwitter className="hover:text-white transition duration-300" />
+  <FaFacebook className="hover:text-white transition duration-300" />
+  <FaYoutube className="hover:text-white transition duration-300" />
+  <FaLinkedin className="hover:text-white transition duration-300" />
+  <FaInstagram className="hover:text-white transition duration-300" />
+  <FaTelegram className="hover:text-white transition duration-300" />
+</div>
 
+
+        <div className="flex items-center space-x-2">
+          <img src="/assest/logo.png" alt="Logo" className="h-8" />
+          <span className="font-bold text-lg">BLUESTOCK</span>
+        </div>
+        <div>
+          Bluestock Fintech  
+          <br />
+          Pune, Maharashtra  
+          <br />
+          MSME Registration No: <br /> <strong>UDYAM-MH-01-0138001</strong>
+        </div>
+        <img src="/assest/footer.png" alt="Startup India" className="h-6" />
+      </div>
+
+      {/* Contact & Emails */}
+      <div className="text-sm space-y-4 text-gray-600">
+        <p>
+          Investment in securities markets are subject to market risks, read all the related documents carefully before investing as prescribed by SEBI. Issued in the interest of the investors.
+        </p>
+        <p>
+          The users can write to <a href="mailto:hello@bluestock.in" className="text-blue-600">hello@bluestock.in</a> for app/website queries.  
+          For IT/Tech feedback: <a href="mailto:cto@bluestock.in" className="text-blue-600">cto@bluestock.in</a>
+        </p>
+      </div>
+
+      {/* Disclaimer */}
+      <div className="text-sm text-gray-600">
+        <p>
+          Disclaimer: We are not a SEBI registered research analyst company. We do not provide any kind of stock recommendations, buy/sell stock tips, or investment and trading advice. All stock scripts shown on Bluestock are for educational purposes only.
+        </p>
+        <p className="mt-2">
+          Before making any investment, consult your financial advisor. Remember that stock markets are subject to market risks.
+        </p>
+      </div>
+    </div>
+
+    {/* Bottom Bar */}
+    <div className="mt-8 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-between text-center text-sm text-gray-500">
+      <p>&copy; Bluestock Fintech All Rights Reserved.</p>
+      <p>Made with ❤️ in Pune, Maharashtra</p>
+    </div>
+  </div>
+</footer>
+</div>
+);
+}
 export default Index;
+
