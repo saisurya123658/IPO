@@ -18,6 +18,8 @@ import Disclamer from "./discalmer";
 import AdminDashboard from "./admin/AdminDashboard";
 import IPO from "./Ipo";
 import {Lock} from "lucide-react";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext"; 
 import { Link } from "react-router-dom";
 
 
@@ -32,6 +34,7 @@ function Index() {
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
   };
+  const { userName } = useContext(UserContext) || {};
 
   const handleLinkClick = () => {
     setIsDropdownOpen(false); // close dropdown when a link is clicked
@@ -182,19 +185,22 @@ function Index() {
             {/* Right: Buttons */}
             <div className="flex items-center space-x-3">
                <Link to="/signin" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">Admin Login</Link>
-              <Link to="/signupnow" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">SignUpNow</Link>
-              <div className="text-black cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
-                  <path d="M3 3h4v4H3V3zm7 0h4v4h-4V3zm7 0h4v4h-4V3zM3 10h4v4H3v-4zm7 0h4v4h-4v-4zm7 0h4v4h-4v-4zM3 17h4v4H3v-4zm7 0h4v4h-4v-4zm7 0h4v4h-4v-4z" />
-                </svg>
-              </div>
-            </div>
+              <button
+          onClick={handleDropdownToggle}
+          className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
+        >
+           <Link
+  to="/signupnow"
+  className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all"
+>
+  {userName ? `👋 ${userName}` : "SignUpNow"}
+</Link>
+        </button>
 
+      </div>
           </div>
         </div>
       </header>
-
-
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
