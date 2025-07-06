@@ -3,8 +3,6 @@ import { useState } from "react";
 function CompanyDetails() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isWatchlisted, setIsWatchlisted] = useState(false);
-
-  // Sample company data
   const companyData = {
     name: "TechFlow Inc.",
     symbol: "TFLW",
