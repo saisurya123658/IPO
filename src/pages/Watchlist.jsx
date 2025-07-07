@@ -1,47 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Watchlist() {
-  const [watchlistItems, setWatchlistItems] = useState([
+  const initialItems = [
     {
       id: 1,
       company: "TechFlow Inc.",
       symbol: "TFLW",
       price: "$42.00",
       change: "+12.5%",
-      changeValue: "+$4.67",
       sector: "Technology",
       date: "Dec 15, 2024",
-      addedDate: "Dec 1, 2024",
       rating: 4.5,
+      logo: "https://th.bing.com/th/id/OIG3.vvy2ck0rOJY0_9VE2f93?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
+      addedDate: "Jul 1, 2025",
       isPositive: true,
+      changeValue: "+$4.67",
     },
     {
       id: 2,
+      company: "Green Energy Corp",
+      symbol: "GREN",
+      price: "$28.50",
+      change: "+8.3%",
+      sector: "Clean Energy",
+      date: "Dec 18, 2024",
+      rating: 4.2,
+      logo: "https://th.bing.com/th/id/OIG4.hD0qDxh3sLp0x8Ne5zm5?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
+      addedDate: "Jul 2, 2025",
+      isPositive: true,
+      changeValue: "+$2.18",
+    },
+    {
+      id: 3,
       company: "BioMed Solutions",
       symbol: "BMED",
       price: "$65.00",
       change: "+15.2%",
-      changeValue: "+$8.59",
       sector: "Healthcare",
       date: "Dec 20, 2024",
-      addedDate: "Nov 28, 2024",
       rating: 4.8,
+      logo: "https://th.bing.com/th/id/OIG1.o4COaVHX11MY4kKri5Zf?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
+      addedDate: "Jul 3, 2025",
       isPositive: true,
+      changeValue: "+$8.56",
     },
     {
-      id: 3,
-      company: "Green Energy Corp",
-      symbol: "GREN",
-      price: "$28.50",
+      id: 4,
+      company: "Crypto Exchange Pro",
+      symbol: "CRYP",
+      price: "$35.00",
       change: "-2.1%",
-      changeValue: "-$0.61",
-      sector: "Clean Energy",
-      date: "Dec 18, 2024",
-      addedDate: "Dec 2, 2024",
-      rating: 4.2,
+      sector: "Technology",
+      date: "Dec 22, 2024",
+      rating: 3.9,
+      logo: "https://cdn-icons-png.flaticon.com/512/825/825519.png",
+      addedDate: "Jul 4, 2025",
       isPositive: false,
+      changeValue: "-$0.75",
     },
-  ]);
+  ];
+
+  // Load from localStorage or use initialItems
+  const [watchlistItems, setWatchlistItems] = useState(() => {
+    const saved = localStorage.getItem("watchlistItems");
+    return saved ? JSON.parse(saved) : initialItems;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("watchlistItems", JSON.stringify(watchlistItems));
+  }, [watchlistItems]);
 
   const [sortBy, setSortBy] = useState("dateAdded");
   const [filterBy, setFilterBy] = useState("all");
@@ -113,6 +140,7 @@ function Watchlist() {
             Track your favorite IPOs and monitor their performance
           </p>
         </div>
+        
 
         {/* Watchlist Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
