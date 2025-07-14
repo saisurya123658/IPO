@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   FaTwitter,
   FaFacebook,
@@ -17,27 +17,25 @@ import Refund from "./refund";
 import Disclamer from "./discalmer";
 import AdminDashboard from "./admin/AdminDashboard";
 import IPO from "./Ipo";
-import {Lock} from "lucide-react";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext"; 
+import { Lock } from "lucide-react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-
 function Index() {
-  // Simple state for basic interactions
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [watchlist, setWatchlist] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [showSuccess, setShowSuccess] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const navigate = useNavigate();
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
   };
   const { userName } = useContext(UserContext) || {};
 
   const handleLinkClick = () => {
-    setIsDropdownOpen(false); // close dropdown when a link is clicked
+    setIsDropdownOpen(false);
   };
 
   // IPO data
@@ -51,6 +49,7 @@ function Index() {
       sector: "Technology",
       date: "Dec 15, 2024",
       rating: 4.5,
+      logo: "https://th.bing.com/th/id/OIG3.vvy2ck0rOJY0_9VE2f93?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
     },
     {
       id: 2,
@@ -61,6 +60,7 @@ function Index() {
       sector: "Clean Energy",
       date: "Dec 18, 2024",
       rating: 4.2,
+      logo: "https://th.bing.com/th/id/OIG4.hD0qDxh3sLp0x8Ne5zm5?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
     },
     {
       id: 3,
@@ -71,6 +71,7 @@ function Index() {
       sector: "Healthcare",
       date: "Dec 20, 2024",
       rating: 4.8,
+      logo: "https://th.bing.com/th/id/OIG1.o4COaVHX11MY4kKri5Zf?w=286&h=286&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
     },
     {
       id: 4,
@@ -81,8 +82,38 @@ function Index() {
       sector: "Technology",
       date: "Dec 22, 2024",
       rating: 3.9,
+      logo: "https://cdn-icons-png.flaticon.com/512/825/825519.png",
     },
   ];
+
+  // Helper: Add IPO to localStorage watchlist (full object, no duplicates)
+  const addToLocalStorageWatchlist = (ipo) => {
+    const saved = localStorage.getItem("watchlistItems");
+    let items = saved ? JSON.parse(saved) : [];
+    if (!items.some((item) => item.id === ipo.id)) {
+      // Add extra fields for Watchlist page
+      const now = new Date();
+      const addedDate = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      const isPositive = ipo.change && ipo.change.trim().startsWith("+");
+      // Calculate changeValue (optional, fallback to "+$0.00")
+      let changeValue = "+$0.00";
+      if (ipo.change && ipo.price) {
+        const priceNum = parseFloat(ipo.price.replace("$", ""));
+        const changeNum = parseFloat(ipo.change);
+        if (!isNaN(priceNum) && !isNaN(changeNum)) {
+          const absVal = Math.abs(Math.round((priceNum * changeNum / 100) * 100) / 100);
+          changeValue = (isPositive ? "+" : "-") + "$" + absVal.toFixed(2);
+        }
+      }
+      items.push({
+        ...ipo,
+        addedDate,
+        isPositive,
+        changeValue,
+      });
+      localStorage.setItem("watchlistItems", JSON.stringify(items));
+    }
+  };
 
   // Filter IPOs based on selected filter
   const filteredIPOs =
@@ -93,28 +124,29 @@ function Index() {
             ipo.sector.toLowerCase().includes(selectedFilter.toLowerCase()),
           )
           .slice(0, 3);
-
   // Handle adding to watchlist
   const handleAddToWatchlist = (ipoId) => {
     if (!watchlist.includes(ipoId)) {
       setWatchlist([...watchlist, ipoId]);
+      // Find the IPO object
+      const ipo = allIPOs.find((ipo) => ipo.id === ipoId);
+      if (ipo) {
+        addToLocalStorageWatchlist(ipo);
+      }
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);
     }
   };
-
   // Handle sign in click
   const handleSignInClick = () => {
     setShowSignInModal(true);
   };
-
   // Handle explore IPOs click
   const handleExploreClick = () => {
     document.getElementById("ipo-section").scrollIntoView({
       behavior: "smooth",
     });
   };
-
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Success Toast */}
@@ -124,84 +156,75 @@ function Index() {
         </div>
       )}
 
-  {/* Header */}
-   <header className="bg-white shadow sticky top-0 z-50">
+      {/* Header */}
+      <header className="bg-white shadow sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between w-full">
-
             {/* Left: Logo */}
             <div className="flex items-center">
               <img src="/assest/logo.png" alt="Logo" className="h-10 w-auto mr-4" />
               <span className="text-2xl font-extrabold text-gray-900"><span className="text-blue-600"></span></span>
             </div>
-
- <nav className="flex items-center space-x-6 relative">
-      <a href="/Ipo" className="text-sm font-semibold text-gray-600 hover:text-blue-700">IPO</a>
-      <a href="/community" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Community</a>
-
-      {/* Products Dropdown */}
-      <div className="relative">
-        <button
-          onClick={handleDropdownToggle}
-          className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
-        >
-          Products ▾
-        </button>
-
-        {isDropdownOpen && (
-          <div className="absolute bg-white shadow-lg rounded mt-2 z-10 w-40">
-            <a
-              href="/products"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              All Products
-            </a>
-            <a
-              href="/Blogs"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              Blogs
-            </a>
-            <a
-              href="/watchlist"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={handleLinkClick}
-            >
-              Watchlist
-            </a>
-          </div>
-        )}
-      </div>
-
-      <a href="/brokers" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Brokers ↗</a>
-      <a href="/news" className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center">
-        Live News <span className="ml-1 bg-blue-600 text-white text-xs font-bold px-1 rounded">NEW</span>
-      </a>
-    </nav>
-
-
+            <nav className="flex items-center space-x-6 relative">
+              <a href="/Ipo" className="text-sm font-semibold text-gray-600 hover:text-blue-700">IPO</a>
+              <a href="/community" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Community</a>
+              {/* Products Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={handleDropdownToggle}
+                  className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
+                >
+                  Products ▾
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute bg-white shadow-lg rounded mt-2 z-10 w-40">
+                    <a
+                      href="/products"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={handleLinkClick}
+                    >
+                      All Products
+                    </a>
+                    <a
+                      href="/Blogs"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={handleLinkClick}
+                    >
+                      Blogs
+                    </a>
+                    <a
+                      href="/watchlist"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={handleLinkClick}
+                    >
+                      Watchlist
+                    </a>
+                  </div>
+                )}
+              </div>
+              <a href="/brokers" className="text-sm font-semibold text-gray-600 hover:text-blue-700">Brokers ↗</a>
+              <a href="/news" className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center">
+                Live News <span className="ml-1 bg-blue-600 text-white text-xs font-bold px-1 rounded">NEW</span>
+              </a>
+            </nav>
             {/* Right: Buttons */}
             <div className="flex items-center space-x-3">
-               <Link to="/signin" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">Admin Login</Link>
+              <Link to="/signin" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all">Admin Login</Link>
               <button
-          onClick={handleDropdownToggle}
-          className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
-        >
-           <Link
-  to="/signupnow"
-  className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all"
->
-  {userName ? `👋 ${userName}` : "SignUpNow"}
-</Link>
-        </button>
-
-      </div>
+                onClick={handleDropdownToggle}
+                className="text-sm font-semibold text-gray-600 hover:text-blue-700 flex items-center focus:outline-none"
+              >
+                <Link
+                  to="/signupnow"
+                  className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-all"
+                >
+                  {userName ? `👋 ${userName}` : "SignUpNow"}
+                </Link>
+              </button>
+            </div>
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
         {/* Hero Section */}
@@ -229,7 +252,6 @@ function Index() {
             </a>
           </div>
         </div>
-
         {/* Quick Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <a
@@ -244,7 +266,6 @@ function Index() {
               Track upcoming IPO launches with detailed information and timeline
             </p>
           </a>
-
           <a
             href="/watchlist"
             className="bg-white rounded-lg shadow-sm p-6 hover:shadow-lg transition-shadow group"
@@ -257,7 +278,6 @@ function Index() {
               Monitor your favorite IPOs and track their performance over time
             </p>
           </a>
-
           <a
             href="/news"
             className="bg-white rounded-lg shadow-sm p-6 hover:shadow-lg transition-shadow group"
@@ -272,7 +292,6 @@ function Index() {
             </p>
           </a>
         </div>
-
         {/* Interactive Stats Section */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -302,7 +321,6 @@ function Index() {
             </div>
           </div>
         </div>
-
         {/* Featured IPOs Section */}
         <div id="ipo-section" className="mb-16">
           <div className="text-center mb-8">
@@ -312,7 +330,6 @@ function Index() {
             <p className="text-gray-600 mb-6">
               Don't miss these exciting public offerings
             </p>
-
             {/* Filter Buttons */}
             <div className="flex justify-center space-x-4 mb-8">
               <button
@@ -357,13 +374,19 @@ function Index() {
               </button>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {filteredIPOs.map((ipo) => (
               <div
                 key={ipo.id}
                 className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-lg hover:scale-105 transition-all cursor-pointer"
               >
+                <div className="flex items-center justify-center mb-4">
+                  <img
+                    src={ipo.logo}
+                    alt={ipo.company + ' logo'}
+                    className="w-16 h-16 object-contain rounded-full border border-gray-200 bg-white shadow"
+                  />
+                </div>
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-1">
@@ -391,7 +414,6 @@ function Index() {
                     {ipo.change}
                   </span>
                 </div>
-
                 <div className="flex justify-between items-center mb-4">
                   <div>
                     <div className="text-2xl font-bold text-gray-900">
@@ -404,7 +426,6 @@ function Index() {
                     <div className="text-xs text-gray-500">Launch Date</div>
                   </div>
                 </div>
-
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleAddToWatchlist(ipo.id)}
@@ -428,7 +449,6 @@ function Index() {
               </div>
             ))}
           </div>
-
           {/* Watchlist Counter */}
           {watchlist.length > 0 && (
             <div className="text-center mt-8">
@@ -444,7 +464,6 @@ function Index() {
             </div>
           )}
         </div>
-
         {/* Interactive Call to Action */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-center text-white hover:from-blue-700 hover:to-purple-700 transition-all">
           <h3 className="text-3xl font-bold mb-4">Ready to Start Investing?</h3>
@@ -452,23 +471,23 @@ function Index() {
             Join thousands of investors who trust IPO Hub for their investment
             decisions
           </p>
-          <button
-            onClick={() => {
-              setShowSuccess(true);
-              setTimeout(() => setShowSuccess(false), 2000);
-            }}
+         <button
+          onClick={() => {
+          navigate("/signupnow");
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 2000);
+          }}
             className="px-8 py-4 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100 hover:scale-105 transition-all shadow-lg"
-          >
-            Create Free Account 🚀
+            >
+              Create Free Account 🚀
           </button>
         </div>
       </main>
       <footer  className="bg-black text-white pt-16 pb-8 text-sm">
-  < div className="max-w-6xl mx-auto px-4">
-    
+  < div className="max-w-6xl mx-auto px-4"> 
    {/* Top Links */}
 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 mb-12">
-  
+
   {/* Resources */}
   <div>
     <h4 className="font-semibold mb-4">Resources</h4>
@@ -500,7 +519,6 @@ function Index() {
       </li>
     </ul>
   </div>
-
   {/* Company */}
   <div>
     <h4 className="font-semibold mb-4">Company</h4>
@@ -512,7 +530,6 @@ function Index() {
       <li><Link to="/Blogs" className="hover:underline">Blogs</Link></li>
     </ul>
   </div>
-
   {/* Offerings */}
   <div>
     <h4 className="font-semibold mb-4">Offerings</h4>
@@ -524,7 +541,6 @@ function Index() {
       <li className="hover:underline cursor-pointer">Products</li>
     </ul>
   </div>
-
   {/* Links */}
   <div>
     <h4 className="font-semibold mb-4">Links</h4>
@@ -552,7 +568,6 @@ function Index() {
       </li>
     </ul>
   </div>
-
   {/* Policy */}
   <div>
     <h4 className="font-semibold mb-4">Policy</h4>
@@ -565,8 +580,6 @@ function Index() {
     </ul>
   </div>
 </div>
-
-
     {/* Middle Row: Logo, Info, Disclaimer */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-300 pt-8">
       
@@ -588,8 +601,6 @@ function Index() {
   <FaInstagram className="hover:text-white transition duration-300" />
   <FaTelegram className="hover:text-white transition duration-300" />
 </div>
-
-
         <div className="flex items-center space-x-2">
           <img src="/assest/logo.png" alt="Logo" className="h-8" />
           <span className="font-bold text-lg">BLUESTOCK</span>
@@ -603,7 +614,6 @@ function Index() {
         </div>
         <img src="/assest/footer.png" alt="Startup India" className="h-6" />
       </div>
-
       {/* Contact & Emails */}
       <div className="text-sm space-y-4 text-gray-600">
         <p>
@@ -614,7 +624,6 @@ function Index() {
           For IT/Tech feedback: <a href="mailto:cto@bluestock.in" className="text-blue-600">cto@bluestock.in</a>
         </p>
       </div>
-
       {/* Disclaimer */}
       <div className="text-sm text-gray-600">
         <p>
@@ -625,16 +634,15 @@ function Index() {
         </p>
       </div>
     </div>
-
     {/* Bottom Bar */}
     <div className="mt-8 pt-4 border-t border-gray-300 flex flex-col md:flex-row justify-between text-center text-sm text-gray-500">
       <p>&copy; Bluestock Fintech All Rights Reserved.</p>
       <p>Made with ❤️ in Pune, Maharashtra</p>
     </div>
   </div>
-</footer>
-</div>
-);
+      </footer>
+    </div>
+
+  );
 }
 export default Index;
-
