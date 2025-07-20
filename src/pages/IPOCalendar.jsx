@@ -266,5 +266,4 @@ function IPOCalendar() {
     </div>
   );
 }
-
 export default IPOCalendar;
