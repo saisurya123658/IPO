@@ -21,8 +21,6 @@ import {Lock} from "lucide-react";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext"; 
 import { Link } from "react-router-dom";
-
-
 function Index() {
   // Simple state for basic interactions
   const [showSignInModal, setShowSignInModal] = useState(false);
@@ -83,8 +81,6 @@ function Index() {
       rating: 3.9,
     },
   ];
-
-  // Filter IPOs based on selected filter
   const filteredIPOs =
     selectedFilter === "all"
       ? allIPOs.slice(0, 3)
@@ -93,8 +89,6 @@ function Index() {
             ipo.sector.toLowerCase().includes(selectedFilter.toLowerCase()),
           )
           .slice(0, 3);
-
-  // Handle adding to watchlist
   const handleAddToWatchlist = (ipoId) => {
     if (!watchlist.includes(ipoId)) {
       setWatchlist([...watchlist, ipoId]);
@@ -102,13 +96,9 @@ function Index() {
       setTimeout(() => setShowSuccess(false), 2000);
     }
   };
-
-  // Handle sign in click
   const handleSignInClick = () => {
     setShowSignInModal(true);
   };
-
-  // Handle explore IPOs click
   const handleExploreClick = () => {
     document.getElementById("ipo-section").scrollIntoView({
       behavior: "smooth",
