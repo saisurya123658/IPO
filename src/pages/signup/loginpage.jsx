@@ -58,6 +58,8 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import axios from "axios";
 
+backend_url = "https://ipo-wusa.onrender.com";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,7 +67,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/user/login", {
+      const res = await axios.post(backend_url + "/api/user/login", {
         email,
         password,
       });
