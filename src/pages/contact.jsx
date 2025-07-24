@@ -59,8 +59,7 @@ const ContactPage = () => {
         </div>
       </div>
     </div>
-  );
-  
+  );  
 };
 
 export default ContactPage;
