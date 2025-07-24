@@ -23,7 +23,7 @@ export default function Careers() {
         </button>
         <div className="flex justify-center mt-6">
           <img
-            src="/growth.png"
+            src="/assest/growth.png"
             alt="Team Growth"
             className="max-w-xs w-full"
           />
@@ -33,7 +33,7 @@ export default function Careers() {
       {/* Download Banner */}
       <section className="bg-blue-600 text-white text-center rounded-lg px-6 py-8 max-w-md mx-auto my-8">
         <img
-          src="/assets/app-preview.png"
+          src="/assest/logo1.png"
           alt="App Preview"
           className="mx-auto mb-4"
         />
@@ -54,10 +54,10 @@ export default function Careers() {
         </div>
 
         <div className="flex justify-around items-center">
-          <img src="/assets/qrcode.png" alt="QR Code" className="h-20" />
+          <img src="/assest/Qr-Code.png" alt="QR Code" className="h-8" />
           <div className="flex flex-col space-y-2">
-            <img src="/assets/google-play-badge.png" alt="Google Play" className="h-8" />
-            <img src="/assets/app-store-badge.png" alt="App Store" className="h-8" />
+            <img src="/assest/google.png" alt="Google Play" className="h-8" />
+            <img src="/assest/App-store.png" alt="App Store" className="h-8" />
           </div>
         </div>
       </section>
