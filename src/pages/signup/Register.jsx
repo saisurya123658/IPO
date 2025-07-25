@@ -103,6 +103,8 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { UserContext } from "../../context/UserContext";
 
+backend_url = "https://ipo-wusa.onrender.com";
+
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -113,7 +115,7 @@ export default function RegisterPage() {
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/user/register", {
+      const res = await fetch(backend_url + "/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

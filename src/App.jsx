@@ -21,6 +21,7 @@ import LoginPage from "./pages/signup/loginpage";
 import RegisterPage from "./pages/signup/Register";
 import ForgotPassword from "./pages/signup/forgotpassword";
 import IPO from "./pages/Ipo";
+import Community from "./pages/Community";
 import { UserProvider } from "./context/UserContext";
 
 // Admin Pages
@@ -56,6 +57,7 @@ function App() {
          <Route path="/Register" element={<RegisterPage/>} />
          <Route path="/ForgotPassword" element={<ForgotPassword/>} />
            <Route path="/Ipo" element={<IPO/>} />
+          <Route path="/community" element={<Community />} />
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/ipos" element={<IPOManagement />} />

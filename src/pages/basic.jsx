@@ -45,6 +45,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+backend_url = "https://ipo-wusa.onrender.com";
+
 export default function BluestockAuth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,7 +54,7 @@ export default function BluestockAuth() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/login", {
+      const res = await axios.post(backend_url+"/api/admin/login", {
         email,
         password,
       });
