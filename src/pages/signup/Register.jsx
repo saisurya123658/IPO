@@ -102,6 +102,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { UserContext } from "../../context/UserContext";
+const backend_url = import.meta.env.VITE_BACKEND_URL;
 
 backend_url = "https://ipo-wusa.onrender.com";
 
