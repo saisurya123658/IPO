@@ -38,7 +38,6 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Index />} />
-        <Route path="/calendar" element={<IpoCalendar />} />
         <Route path="/calendar" element={<IPOCalendar />} />
         <Route path="/watchlist" element={<Watchlist />} />
         <Route path="/Blogs" element={<BlogPage/>}/>
