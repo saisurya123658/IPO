@@ -57,7 +57,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import axios from "axios";
-
+const backend_url = import.meta.env.VITE_BACKEND_URL;
 backend_url = "https://ipo-wusa.onrender.com";
 
 export default function LoginPage() {
