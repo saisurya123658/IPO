@@ -3,7 +3,6 @@ import { useState } from "react";
 function IPOCalendar() {
   const [selectedMonth, setSelectedMonth] = useState("December 2024");
   const [viewMode, setViewMode] = useState("calendar"); // calendar or list
-
   const ipoEvents = [
     {
       id: 1,
