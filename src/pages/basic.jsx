@@ -45,7 +45,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-backend_url = "https://ipo-wusa.onrender.com";
+const backend_url = import.meta.env.VITE_BACKEND_URL || "https://ipo-wusa.onrender.com";
 
 export default function BluestockAuth() {
   const [email, setEmail] = useState("");
